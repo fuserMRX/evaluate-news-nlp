@@ -8,6 +8,9 @@ const spinner = new Spin();
 const handleSubmit = async (event) => {
     event.preventDefault();
 
+    spinner.target = document.body;
+    spinner.start();
+
     const results = document.querySelector('#results');
     const nlpForm = document.querySelector('.nlp-form');
     const errorSelector = document.querySelector('.nlp-form-error');
@@ -44,10 +47,7 @@ const handleSubmit = async (event) => {
                 redirect: 'follow'
             };
 
-            spinner.target = document.body;
-            spinner.start();
             const meaningCloudInfo = await ajaxHelper(meaningCloudAPI, requestOptions);
-            spinner.stop();
 
             const { agreement, confidence, irony, model, score_tag, subjectivity } = meaningCloudInfo || {};
             const meaningCloudInfoOutput = htmlHelper({
@@ -62,6 +62,7 @@ const handleSubmit = async (event) => {
             results.innerHTML = meaningCloudInfoOutput;
         }
     }
+    spinner.stop();
 };
 
 export { handleSubmit };
