@@ -1,5 +1,9 @@
 import { ajaxHelper } from './helpers/api';
+import { htmlHelper } from './helpers/htmlHelper';
 import { meaningCloudAPI, keyURL } from './helpers/constants';
+import Spin from './helpers/spinner';
+
+const spinner = new Spin();
 
 const handleSubmit = async (event) => {
     event.preventDefault();
@@ -39,9 +43,23 @@ const handleSubmit = async (event) => {
                 body: formdata,
                 redirect: 'follow'
             };
+
+            spinner.target = document.body;
+            spinner.start();
             const meaningCloudInfo = await ajaxHelper(meaningCloudAPI, requestOptions);
+            spinner.stop();
+
+            const { agreement, confidence, irony, model, score_tag, subjectivity } = meaningCloudInfo || {};
+            const meaningCloudInfoOutput = htmlHelper({
+                agreement,
+                confidence,
+                irony,
+                model,
+                score_tag,
+                subjectivity,
+            });
             console.log(meaningCloudInfo);
-            results.innerHTML = 'hello!';
+            results.innerHTML = meaningCloudInfoOutput;
         }
     }
 };
