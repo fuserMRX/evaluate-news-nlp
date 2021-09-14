@@ -34,7 +34,7 @@ const handleSubmit = async (event) => {
         const { application_key } = apiKeyInfo || {};
         console.log(application_key);
 
-        // MAKE API request if our key is present
+        // DO API request if our key is present
         if (application_key) {
             const formdata = new FormData();
             formdata.append('key', application_key);
