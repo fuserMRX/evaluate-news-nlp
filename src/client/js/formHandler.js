@@ -41,13 +41,15 @@ const handleSubmit = async (event) => {
             formdata.append('txt', formTextValue);
             formdata.append('lang', 'en');
 
+            // proper options for axios request
             const requestOptions = {
                 method: 'POST',
-                body: formdata,
+                url: meaningCloudAPI,
+                data: formdata,
                 redirect: 'follow'
             };
 
-            const meaningCloudInfo = await ajaxHelper(meaningCloudAPI, requestOptions);
+            const meaningCloudInfo = await ajaxHelper(requestOptions);
 
             const { agreement, confidence, irony, model, score_tag, subjectivity } = meaningCloudInfo || {};
             const meaningCloudInfoOutput = htmlHelper({
