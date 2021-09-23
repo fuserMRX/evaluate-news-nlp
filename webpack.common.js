@@ -1,4 +1,4 @@
-// file to gather all similiar cases between prod and development
+// file to get all similiar cases between prod and development
 // eslint-disable-next-line no-unused-vars
 const webpack = require('webpack');
 const path = require('path');
@@ -18,7 +18,7 @@ module.exports = {
         // exposed entry
         library: {
             name: 'Client',
-            type: 'var',
+            type: 'umd',
         }
         // libraryTarget is not relevant any more - output.library.type is enough
     },

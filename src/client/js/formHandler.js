@@ -1,9 +1,10 @@
-import { ajaxHelper } from './helpers/api';
-import { htmlHelper } from './helpers/htmlHelper';
+import { getApiKey, getMeaningCloudInfo } from './helpers/api';
 import { meaningCloudAPI, keyURL } from './helpers/constants';
 import Spin from './helpers/spinner';
 
 const spinner = new Spin();
+
+const nlpForm = document.querySelector('.nlp-form');
 
 const handleSubmit = async (event) => {
     event.preventDefault();
@@ -12,14 +13,13 @@ const handleSubmit = async (event) => {
     spinner.start();
 
     const results = document.querySelector('#results');
-    const nlpForm = document.querySelector('.nlp-form');
     const errorSelector = document.querySelector('.nlp-form-error');
     const formTextValue = nlpForm.querySelector('#npltext').value;
 
     // Reset an input field for the results
     results.innerHTML = '';
 
-    errorSelector.classList.toggle('show', !formTextValue);
+    errorSelector && errorSelector.classList.toggle('show', !formTextValue);
 
     if (formTextValue) {
         // Reset form after submit
@@ -29,42 +29,21 @@ const handleSubmit = async (event) => {
         Client.checkForName(formTextValue);
 
         console.log('::: Form Submitted :::');
+
         // Get API key
-        const apiKeyInfo = await ajaxHelper(keyURL);
-        const { application_key } = apiKeyInfo || {};
-        console.log(application_key);
+        const application_key = await getApiKey(keyURL);
 
         // DO API request if our key is present
         if (application_key) {
-            const formdata = new FormData();
-            formdata.append('key', application_key);
-            formdata.append('txt', formTextValue);
-            formdata.append('lang', 'en');
-
-            // proper options for axios request
-            const requestOptions = {
-                method: 'POST',
-                url: meaningCloudAPI,
-                data: formdata,
-                redirect: 'follow'
-            };
-
-            const meaningCloudInfo = await ajaxHelper(requestOptions);
-
-            const { agreement, confidence, irony, model, score_tag, subjectivity } = meaningCloudInfo || {};
-            const meaningCloudInfoOutput = htmlHelper({
-                agreement,
-                confidence,
-                irony,
-                model,
-                score_tag,
-                subjectivity,
-            });
-            console.log(meaningCloudInfo);
-            results.innerHTML = meaningCloudInfoOutput;
+            const MeaningCloudInfo = await getMeaningCloudInfo(application_key, formTextValue, meaningCloudAPI);
+            results.innerHTML = MeaningCloudInfo;
         }
     }
     spinner.stop();
 };
+
+document.addEventListener('DOMContentLoaded', function () {
+    nlpForm.addEventListener('submit', handleSubmit);
+});
 
 export { handleSubmit };
