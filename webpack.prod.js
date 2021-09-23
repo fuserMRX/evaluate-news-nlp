@@ -42,5 +42,8 @@ module.exports = merge(common, {
             filename: '[name].css'
         }),
         new WorkboxPlugin.GenerateSW(),
+        new webpack.DefinePlugin({
+            PRODUCTION: JSON.stringify(true),
+        }),
     ],
 });
