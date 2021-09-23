@@ -1,4 +1,5 @@
 function checkForName(inputText) {
+    let isCaptain = false;
     console.log('::: Running checkForName :::', inputText);
     let names = [
         'Picard',
@@ -8,9 +9,11 @@ function checkForName(inputText) {
         'Georgiou'
     ];
 
-    if(names.includes(inputText)) {
+    if (names.includes(inputText)) {
         console.log('Welcome, Captain!');
+        isCaptain = true;
     }
+    return isCaptain;
 }
 
 export { checkForName };
