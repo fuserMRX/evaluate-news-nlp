@@ -3,7 +3,7 @@ import { htmlHelper } from './htmlHelper';
 
 const ajaxHelper = async (params = {}) => {
     let responseInfo = null;
-    const response = await(axios(params))
+    const response = await (axios(params))
         .catch((err) => {
             console.error(err);
         });
@@ -25,8 +25,9 @@ const getApiKey = async (keyURL) => {
 
 const getMeaningCloudInfo = async (application_key, formTextValue, meaningCloudAPI) => {
     const formdata = new FormData();
+    let meaningCloudInfoOutput = '';
     formdata.append('key', application_key);
-    formdata.append('txt', formTextValue);
+    formdata.append('url', formTextValue);
     formdata.append('lang', 'en');
 
     // proper options for axios request
@@ -38,17 +39,23 @@ const getMeaningCloudInfo = async (application_key, formTextValue, meaningCloudA
     };
 
     const meaningCloudInfo = await ajaxHelper(requestOptions);
-
-    const { agreement, confidence, irony, model, score_tag, subjectivity } = meaningCloudInfo || {};
-    const meaningCloudInfoOutput = htmlHelper({
-        agreement,
-        confidence,
-        irony,
-        model,
-        score_tag,
-        subjectivity,
-    });
     console.log(meaningCloudInfo);
+    if (meaningCloudInfo.status.msg === 'OK') {
+        const { agreement, confidence, irony, model, score_tag, subjectivity } = meaningCloudInfo || {};
+        meaningCloudInfoOutput = htmlHelper({
+            agreement,
+            confidence,
+            irony,
+            model,
+            score_tag,
+            subjectivity,
+        });
+    } else {
+        // url example to test => https://blog.risingstack.com/10-best-practices-for-writing-node-js-rest-apis/
+        const { msg, code } = meaningCloudInfo.status;
+        meaningCloudInfoOutput = `${msg} - MeaningCloud Error Code = <strong>${code}</strong>`;
+    }
+
     return meaningCloudInfoOutput;
 };
 

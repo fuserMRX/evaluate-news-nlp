@@ -1,10 +1,14 @@
 const htmlHelper = (paramObj) => {
-    let finalString = '<ul>';
-    for (const key of Object.keys(paramObj)) {
-        console.log(key, paramObj[key]);
-        finalString += `<li><b>${key}</b> - ${paramObj[key]}</li>`;
+    let finalString = '';
+    if (Object.keys(paramObj).length) {
+        finalString += '<ul>';
+        for (const key of Object.keys(paramObj)) {
+            console.log(key, paramObj[key]);
+            finalString += `<li><b>${key}</b> - ${paramObj[key]}</li>`;
+        }
+        finalString += `</ul>`;
+        return finalString;
     }
-    finalString += `</ul>`;
     return finalString;
 };
 

@@ -14,21 +14,27 @@ const handleSubmit = async (event) => {
 
     const results = document.querySelector('#results');
     const errorSelector = document.querySelector('.nlp-form-error');
+    const errorUrlSelector = document.querySelector('.nlp-form-url-error');
     const formTextValue = nlpForm.querySelector('#npltext').value;
+    let isUrlValid = false;
 
     // Reset an input field for the results
     results.innerHTML = '';
 
     errorSelector && errorSelector.classList.toggle('show', !formTextValue);
+    errorUrlSelector.classList.contains('show') && errorUrlSelector.classList.remove('show');
 
     if (formTextValue) {
         // Reset form after submit
         nlpForm.reset();
 
         // eslint-disable-next-line no-undef
-        Client.checkForName(formTextValue);
-
-        console.log('::: Form Submitted :::');
+        isUrlValid = Client.checkForUrl(formTextValue);
+        errorUrlSelector && errorUrlSelector.classList.toggle('show', !isUrlValid);
+        if (!isUrlValid) {
+            spinner.stop();
+            return;
+        }
 
         // Get API key
         const application_key = await getApiKey(keyURL);

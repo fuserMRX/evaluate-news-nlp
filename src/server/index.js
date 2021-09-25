@@ -18,8 +18,8 @@ app.use(express.static('dist'));
 console.log(__dirname);
 
 app.get('/', function (req, res) {
-    // res.sendFile('dist/index.html')
-    res.sendFile(path.resolve('src/client/views/index.html'));
+    res.sendFile('dist/index.html');
+    // res.sendFile(path.resolve('src/client/views/index.html'));
 });
 
 app.get('/key', function (req, res) {
